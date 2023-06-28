@@ -22,7 +22,7 @@ const Result = () => {
 
     return (
         <div className="h-full flex flex-col items-center justify-center">
-            <h1 className="text-6xl font-bold mb-8">{isWinner ? 'You did it! You are a WINNER!' : 'Oops you did not find them all! :c'}</h1>
+            <h1 className="text-4xl sm:text-6xl text-center font-bold mb-8">{isWinner ? 'You did it! You are a WINNER!' : 'Oops you did not find them all! :c'}</h1>
             <div className='flex flex-row gap-4'>
                 <button className="bg-blue-500 text-white px-4 py-2 rounded hover:animate-bounce" onClick={handleBackHome}>Back to home</button>
                 <button className="bg-green-500 text-white px-4 py-2 rounded hover:animate-bounce" onClick={handlePlayAgain}>Play again?</button>
