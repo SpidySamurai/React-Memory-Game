@@ -33,7 +33,7 @@ Follow these steps to get the Memory Game up and running:
     3.1 npm run dev
 
 4. **Open the game in your browser**
-- The game will be available at `http://localhost:5173/evolve-memory-game/`.
+- The game will be available at `http://localhost:5173/React-Memory-Game/`.
 
 ## How to Play
 1. **Start the Game**
