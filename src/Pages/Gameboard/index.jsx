@@ -38,12 +38,10 @@ const GameBoard = () => {
     };
   }, [timer, gameCompleted]);
 
-  const handleMatchModalClose = () => {
+  const handleMatchModalClose = React.useCallback(() => {
     setIsMatch(false);
     setShowModal(false);
-    // If it was a mismatch, we might want to ensure cards are flipped back if not handled by auto-timeout
-    // But hook handles it.
-  };
+  }, [setIsMatch, setShowModal]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full px-4">

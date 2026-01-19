@@ -2,9 +2,14 @@ import React, { useEffect } from 'react';
 import matchAudio from '../../assets/correct.mp3';
 
 const Notification = ({ message, onClose }) => {
+  const hasPlayedRef = React.useRef(false);
+
   useEffect(() => {
-    const audio = new Audio(matchAudio);
-    audio.play().catch(e => console.log("Audio play failed", e));
+    if (!hasPlayedRef.current) {
+      const audio = new Audio(matchAudio);
+      audio.play().catch(e => console.log("Audio play failed", e));
+      hasPlayedRef.current = true;
+    }
     
     const timer = setTimeout(() => {
       onClose();
