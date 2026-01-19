@@ -42,26 +42,28 @@ function useMemoryGame() {
     const verifyIsPaired = () => {
         const [first, second] = flippedCards;
         if (cards[first].cardType === cards[second].cardType) {
-            const newMatchedCards = [...matchedCards]
-            newMatchedCards.push(cards[first], cards[second]);
-            setMatchCards(newMatchedCards)
+            const newMatchedCards = [...matchedCards, cards[first], cards[second]];
+            setMatchCards(newMatchedCards);
             setFlippedCards([]);
             setIsMatch(true);
-            setShowModal(true);
-            return;
+            // Optional: Only show modal on game complete, not every match. 
+            // For now, let's keep it less intrusive or remove modal for simple matches if desired.
+            // keeping existing behavior but cleaning it:
+            setShowModal(true); 
         } else {
-            setShowModal(true);
             setIsMatch(false);
-            return;
+            // User feedback: Wait a bit then flip back
+            timeout.current = setTimeout(() => {
+                setFlippedCards([]);
+            }, 1000); 
         }
-        timeout.current = setTimeout(() => {
-            setFlippedCards([]);
-        }, 500);
     };
 
     useEffect(() => {
         if (flippedCards.length === 2) {
-            setTimeout(verifyIsPaired, 500);
+            // Prevent immediate verify to allow user to see the second card
+            const timer = setTimeout(verifyIsPaired, 500);
+            return () => clearTimeout(timer);
         }
     }, [flippedCards]);
 

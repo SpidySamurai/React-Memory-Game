@@ -13,7 +13,7 @@ const HomePage = () => {
             <p className="text-xl text-gray-600 mt-4">Test your memory and have fun!</p>
             <Link
                 to="/gameboard"
-                className="mt-6 inline-block px-8 py-3 text-lg font-semibold text-white bg-green-500 rounded hover:bg-green-600 animate-slideUp hover:animate-bounce"
+                className="mt-6 inline-block px-8 py-3 text-lg font-semibold text-white bg-green-500 rounded hover:bg-green-600 animate-slideUp transition-transform transform hover:scale-105"
             >
                 Start Game
             </Link>

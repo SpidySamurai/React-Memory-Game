@@ -3,45 +3,57 @@ import MemoryCard from '../../Components/MemoryCard';
 import useMemoryGame from '../../hooks/useMemoryGame';
 import tickingAudio from '../../assets/ticking.mp3';
 import { useNavigate } from 'react-router-dom';
-import Modal from '../../Components/Modal';
+import Notification from '../../Components/Notification';
 
 const GameBoard = () => {
   const [timer, setTimer] = useState(30);
-  const { cards, handleSelectCard, isCardFlipped, showModal, setShowModal,setFlippedCards, isMatch, setIsMatch, gameCompleted } =
-    useMemoryGame();
+  const { cards, handleSelectCard, isCardFlipped, showModal, setShowModal, setFlippedCards, isMatch, setIsMatch, gameCompleted } = useMemoryGame();
   const navigate = useNavigate();
 
-  const audio = new Audio(tickingAudio);
+  // Audio: Create once
+  const audioRef = React.useRef(new Audio(tickingAudio));
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prevTimer) => prevTimer - 1);
-    }, 1000);
-
-    if (timer <= 10) {
-      audio.play();
+    // Timer logic
+    if (timer > 0 && !gameCompleted) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    } else if (timer === 0 || gameCompleted) {
+        // Navigate or End Game
+        navigate('/result', { state: { isWinner: gameCompleted } });
     }
+  }, [timer, gameCompleted, navigate]);
 
-    if (timer === 0 || gameCompleted) {
-      clearInterval(interval);
-      navigate('/result', { state: { isWinner: gameCompleted } });
+  useEffect(() => {
+    // Sound logic separate/cleaner
+    const audio = audioRef.current;
+    if (timer <= 10 && timer > 0 && !gameCompleted) {
+        audio.play().catch(e => console.log("Audio play failed", e));
     }
-
     return () => {
-      clearInterval(interval);
+        audio.pause();
+        audio.currentTime = 0;
     };
-  }, [timer]);
+  }, [timer, gameCompleted]);
 
   const handleMatchModalClose = () => {
     setIsMatch(false);
     setShowModal(false);
-    setFlippedCards([]);
+    // If it was a mismatch, we might want to ensure cards are flipped back if not handled by auto-timeout
+    // But hook handles it.
   };
 
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="text-3xl sm:text-4xl font-bold mb-8 mt-4">Remaining {timer} seconds</div>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 place-items-center mb-12">
+    <div className="flex flex-col items-center justify-center w-full px-4">
+      <div className={`text-3xl sm:text-4xl font-bold mb-8 mt-4 transition-colors ${timer <= 10 ? 'text-red-500 animate-pulse' : 'text-gray-800'}`}>
+        Remaining {timer} seconds
+      </div>
+      
+      {/* Responsive Grid: 2 cols mobile, 4 cols tablet/desktop. 
+          Added auto-rows-fr to ensure equal height if needed depending on card size */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 place-items-center mb-12 w-full max-w-4xl">
         {cards.map((card, index) => (
           <MemoryCard
             key={index}
@@ -52,10 +64,12 @@ const GameBoard = () => {
           />
         ))}
       </div>
+      
       {showModal && (
-        <Modal onClose={handleMatchModalClose} isMatch={isMatch}>
-          {isMatch ? <p>Nice! It's a match!</p> : <p>Sorry, but this is not a match.</p>}
-        </Modal>
+        <Notification 
+          message="It's a Match!" 
+          onClose={handleMatchModalClose} 
+        />
       )}
     </div>
   );
