@@ -5,22 +5,24 @@ This project is configured to deploy to GitHub Pages automatically.
 ## Automated Deployment
 
 ### Prerequisites
-1. The repository must have GitHub Pages enabled in the repository settings
-2. GitHub Actions must have the necessary permissions
+GitHub Actions must have the necessary permissions to deploy.
 
 ### Setup Steps
 
-1. **Enable GitHub Pages**:
-   - Go to your repository on GitHub
-   - Navigate to **Settings** → **Pages**
-   - Under "Build and deployment", select **Source**: `GitHub Actions`
+The workflow is configured to automatically enable GitHub Pages on first run. However, if you experience issues, you may need to manually configure permissions:
 
-2. **Configure Permissions**:
+1. **Configure Permissions** (if needed):
    - Go to **Settings** → **Actions** → **General**
    - Scroll to "Workflow permissions"
    - Select **"Read and write permissions"**
    - Check **"Allow GitHub Actions to create and approve pull requests"**
    - Click **Save**
+
+2. **Verify GitHub Pages** (optional):
+   - Go to your repository on GitHub
+   - Navigate to **Settings** → **Pages**
+   - Verify that **Source** is set to `GitHub Actions`
+   - This should be automatically configured by the workflow
 
 ### How It Works
 
@@ -28,6 +30,7 @@ The workflow (`.github/workflows/deploy.yml`) automatically:
 - Triggers on every push to the `main` branch
 - Installs dependencies
 - Builds the React application
+- Automatically enables GitHub Pages if not already configured
 - Deploys the built files to GitHub Pages
 
 ### Manual Deployment
